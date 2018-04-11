@@ -33,7 +33,7 @@
     <scala.version>2.10.7</scala.version>
     <junit.version>4.11</junit.version>
     <slf4j.version>1.7.12</slf4j.version>
-    <flume.version>1.8.0</flume.version>
+    <flume.version>1.7.0</flume.version>
 
   </properties>
 
