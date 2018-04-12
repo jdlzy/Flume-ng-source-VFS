@@ -206,8 +206,9 @@ class SourceVFS extends AbstractSource with Configurable with EventDrivenSource 
     val event: Event = new SimpleEvent
     val headers: java.util.Map[String, String] = new util.HashMap[String, String]()
     headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
+    val flag=fileName.split("_")(0)
     headers.put("fileName", fileName);
-    headers.put("flag","LTE-SITE")
+    headers.put("flag",flag)
     event.setBody(data)
     event.setHeaders(headers)
     try {
