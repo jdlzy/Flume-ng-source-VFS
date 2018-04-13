@@ -107,7 +107,7 @@ StateListener, processDiscovered: Boolean, sourceName: String) {
 
   /**
     * Add element to list of registered listeners
-    *
+    *添加一个监听器，放在监听器列表的最前边
     * @param listener
     */
   def addEventListener(listener: StateListener): Unit = {
@@ -116,7 +116,7 @@ StateListener, processDiscovered: Boolean, sourceName: String) {
 
   /**
     * Remove element from list of registered listeners
-    *
+    * 从监听器列表中删除指定的监听器
     * @param listener
     */
   def removeEventListener(listener: StateListener): Unit = {
@@ -131,7 +131,7 @@ StateListener, processDiscovered: Boolean, sourceName: String) {
   /**
     *
     * auxiliar for using seconds where miliseconds is requiered
-    *
+    *把秒转换为毫秒
     * @param seconds
     * @return
     */
@@ -141,7 +141,7 @@ StateListener, processDiscovered: Boolean, sourceName: String) {
 
   /**
     * Make a method runnable and schedule for one-shot
-    *
+    *创建一个线程，开始监听
     * @return
     */
   def getTaskToSchedule(): Runnable = {

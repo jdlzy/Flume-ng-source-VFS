@@ -15,8 +15,12 @@ class State(name: String) {
 }
 
 object State extends Serializable {
+  //创建
   final val ENTRY_CREATE: State = new State("entry_create")
+  //删除
   final val ENTRY_DELETE: State = new State("entry_delete")
+  //改变
   final val ENTRY_MODIFY: State = new State("entry_modify")
+  //发现
   final val ENTRY_DISCOVER: State = new State("entry_discover")
 }

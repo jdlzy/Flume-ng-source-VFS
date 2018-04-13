@@ -1,7 +1,9 @@
 package org.keedio.flume.source.vfs.watcher
 
 import java.net.URI
+import javax.tools.FileObject
 
+import org.apache.commons.vfs2
 import org.apache.commons.vfs2._
 import org.apache.commons.vfs2.impl.StandardFileSystemManager
 import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder
@@ -13,6 +15,7 @@ import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder
 /**
   * VFS2 supported file systems requiere is some cases to
   * specify config parameters
+  * vfs2支持文件系统，必须指定配置参数
   */
 object FileObjectBuilder {
   /**
@@ -20,10 +23,10 @@ object FileObjectBuilder {
     * @param uri
     * @return
     */
-  def  getFileObject(uri: String): FileObject = {
+  def  getFileObject(uri: String): vfs2.FileObject = {
     val scheme = getScheme(uri)
     scheme match {
-      case "ftp" => {
+      case "ftp" =>
         val fs = new StandardFileSystemManager
         val options: FileSystemOptions = new FileSystemOptions()
         val builder = FtpFileSystemConfigBuilder.getInstance()
@@ -31,7 +34,6 @@ object FileObjectBuilder {
         builder.setPassiveMode(options, true) //set to true if behind firewall
         fs.init()
         fs.resolveFile(uri, options)
-      }
       case _ =>
         val fs = new StandardFileSystemManager
         fs.setCacheStrategy(CacheStrategy.MANUAL)
