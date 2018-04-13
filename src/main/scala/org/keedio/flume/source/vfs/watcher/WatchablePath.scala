@@ -25,7 +25,7 @@ StateListener, processDiscovered: Boolean, sourceName: String) {
   private val children: Array[FileObject] = fileObject.getChildren
   addEventListener(listener)
 
-  //observer for changes to a file
+  //监控目录的文件变化
   private val fileListener = new VfsFileListener {
     override def fileDeleted(fileChangeEvent: FileChangeEvent): Unit = {
       val eventDelete: StateEvent = new StateEvent(fileChangeEvent, State.ENTRY_DELETE)
@@ -57,9 +57,13 @@ StateListener, processDiscovered: Boolean, sourceName: String) {
   }
 
   //Thread based polling file system monitor with a 1 second delay.
+  //线程每一秒进行一次获取文件系统监控器
   private val defaultMonitor: DefaultFileMonitor = new DefaultFileMonitor(fileListener)
+  //设置监控时间
   defaultMonitor.setDelay(secondsToMiliseconds(refresh))
+  //设置是否进行文件目录的递归
   defaultMonitor.setRecursive(true)
+  //
   defaultMonitor.addFile(fileObject)
   processDiscovered match {
     case true =>
@@ -96,7 +100,7 @@ StateListener, processDiscovered: Boolean, sourceName: String) {
 
   /**
     * Check filename string against regex
-    *
+    *检查文件名称是否符合正则表达式
     * @param stateEvent
     * @return
     */
