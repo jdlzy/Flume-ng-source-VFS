@@ -1,4 +1,4 @@
-package org.keedio.flume.source.vfs.watcher
+package org.lzy.flume.source.vfs.watcher
 
 import java.net.URI
 import javax.tools.FileObject
@@ -9,8 +9,8 @@ import org.apache.commons.vfs2.impl.StandardFileSystemManager
 import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder
 /**
   * Created by luislazaro on 7/3/16.
-  * lalazaro@keedio.com
-  * Keedio
+  * lalazaro@lzy.com
+  * lzy
   */
 /**
   * VFS2 supported file systems requiere is some cases to

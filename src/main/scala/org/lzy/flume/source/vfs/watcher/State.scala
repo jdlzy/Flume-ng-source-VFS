@@ -1,4 +1,4 @@
-package org.keedio.flume.source.vfs.watcher
+package org.lzy.flume.source.vfs.watcher
 
 /**
   * Created by luislazaro on 7/3/16.
@@ -21,6 +21,6 @@ object State extends Serializable {
   final val ENTRY_DELETE: State = new State("entry_delete")
   //改变
   final val ENTRY_MODIFY: State = new State("entry_modify")
-  //发现
+  //发现,监控文件内容是否发生了变化
   final val ENTRY_DISCOVER: State = new State("entry_discover")
 }

@@ -1,4 +1,4 @@
-package org.keedio.flume.source.vfs.watcher
+package org.lzy.flume.source.vfs.watcher
 
 import org.apache.commons.vfs2.{FileChangeEvent, FileListener}
 

@@ -1,4 +1,4 @@
-package org.keedio.flume.source.vfs.filemonitor
+package org.lzy.flume.source.vfs.filemonitor
 
 import java.io.IOException
 import java.nio.file.{Files, Paths}
@@ -6,7 +6,7 @@ import java.nio.file.{Files, Paths}
 import org.apache.commons.vfs2.impl.DefaultFileMonitor
 import org.apache.commons.vfs2._
 import org.junit.{Assert, Test}
-import org.keedio.flume.source.vfs.watcher.VfsFileListener
+import org.lzy.flume.source.vfs.watcher.VfsFileListener
 import org.slf4j.{Logger, LoggerFactory}
 
 /**

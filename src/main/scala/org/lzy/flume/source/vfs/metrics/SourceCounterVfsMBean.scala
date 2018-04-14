@@ -1,13 +1,13 @@
 /*
-    KEEDIO
+    lzy
 *//*
-    KEEDIO
+    lzy
 */
-package org.keedio.flume.source.vfs.metrics
+package org.lzy.flume.source.vfs.metrics
 
 /**
   *
-  * @author Luis Lázaro <lalazaro@keedio.com>
+  * @author Luis Lázaro <lalazaro@lzy.com>
   */
 trait SourceCounterVfsMBean {
   /**

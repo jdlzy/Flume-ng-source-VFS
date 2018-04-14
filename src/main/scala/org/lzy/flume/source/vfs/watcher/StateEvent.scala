@@ -1,11 +1,11 @@
-package org.keedio.flume.source.vfs.watcher
+package org.lzy.flume.source.vfs.watcher
 
 import org.apache.commons.vfs2.FileChangeEvent
 
 /**
   * Created by luislazaro on 7/3/16.
-  * lalazaro@keedio.com
-  * Keedio
+  * lalazaro@lzy.com
+  * lzy
   */
 class StateEvent(fileChangeEvent: FileChangeEvent, state: State) {
   def getState = state
