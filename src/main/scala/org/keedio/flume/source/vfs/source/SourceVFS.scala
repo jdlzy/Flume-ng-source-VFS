@@ -29,10 +29,15 @@ class SourceVFS extends AbstractSource with Configurable with EventDrivenSource 
   var mapOfFiles = mutable.HashMap[String, Long]()
   var sourceVFScounter = new org.keedio.flume.source.vfs.metrics.SourceCounterVfs("")
   val executor: ExecutorService = Executors.newFixedThreadPool(10)
+  //源名称
   var sourceName: String = ""
+  //文件状态
   var statusFile = ""
+  //监控目录
   var workDir: String = ""
+  //文件名称过滤正则表达式
   var includePattern: String = ""
+  //传送完毕的文件被移动到该目录下。
   var processedDir: String = ""
   var processDiscovered: Boolean = true
 
