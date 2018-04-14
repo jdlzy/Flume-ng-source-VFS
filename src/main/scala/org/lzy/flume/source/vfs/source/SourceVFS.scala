@@ -17,6 +17,9 @@ import org.lzy.flume.source.vfs.watcher._
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.mutable
+import java.util.Calendar
+import java.text.SimpleDateFormat
+import org.lzy.flume.source.vfs.utils.JDBCUtil
 
 /**
   * 功能描述: Flume的VFS数据源，可以支持本地以及ftp数据源
@@ -26,7 +29,7 @@ import scala.collection.mutable
   * Date 2018/4/14 11:13
   */
 class SourceVFS extends AbstractSource with Configurable with EventDrivenSource {
-
+    val UpdateBatchSdf: SimpleDateFormat = new SimpleDateFormat("yyyyMM")
     val LOG: Logger = LoggerFactory.getLogger(classOf[SourceVFS])
     var mapOfFiles = mutable.HashMap[String, Long]()
     var sourceVFScounter = new org.lzy.flume.source.vfs.metrics.SourceCounterVfs("")
@@ -43,6 +46,7 @@ class SourceVFS extends AbstractSource with Configurable with EventDrivenSource 
     var processedDir: String = ""
     //
     var processDiscovered: Boolean = true
+    private val fileTypeList: Array[String] = Array[String]("GSM-SITE", "GSM-CELL", "WCDMA-SITE", "WCDMA-CELL", "LTE-SITE", "LTE-CELL", "PHYSICS", "GSM-SCENE", "WCDMA-SCENE", "LTE-SCENE")
 
     /**
       * 配置一个监听器
@@ -58,8 +62,17 @@ class SourceVFS extends AbstractSource with Configurable with EventDrivenSource 
                             if (!isEventValidStatus(event)) {
                                 Unit
                             }
-                            val fileName = event.getFileChangeEvent.getFile.getName.getBaseName
-                            LOG.info("Source[" + sourceName + "]接收到事件: " + event.getState.toString() + "文件+ fileName)")
+                            val fileName: String = event.getFileChangeEvent.getFile.getName.getBaseName
+                            LOG.info("Source[" + sourceName + "]接收到事件: " + event.getState.toString() + "文件" + fileName)
+                            /**
+                              * 删除该文件对应的数据表中的对应的批次的数据
+                              */
+                            val inputBatch: String = getlastMonth
+                            val tableName = fileName.split("_")(0).replace("-", "_")+"_TEST"
+                            if (!(tableName.equalsIgnoreCase("GSM_SCENE") || tableName.equalsIgnoreCase("WCDMA_SCENE") || tableName.equalsIgnoreCase("LTE_SCENE"))) {
+                                        val isDeleteSuccess = JDBCUtil.deleteByInputBatch(inputBatch, tableName)
+                                if(isDeleteSuccess)LOG.info("表["+tableName+"]数据批次"+inputBatch+"清除成功.") else LOG.error("表["+tableName+"]数据批次"+inputBatch+"清除失败!!")
+                            }
                             val fileSize = event.getFileChangeEvent.getFile.getContent.getSize
                             val inputStream = event.getFileChangeEvent.getFile.getContent.getInputStream
                             LOG.info("线程[" + Thread.currentThread().getName + "]开始处理新文件: " + fileName)
@@ -73,8 +86,11 @@ class SourceVFS extends AbstractSource with Configurable with EventDrivenSource 
                                     //默认目标目录如果不存在不会拷贝
 //                                    FileUtils.moveFileToDirectory(new File(workDir + "/" + fileName), new File(processedDir), false)
                                     //修改为如果目录不存在，那么创建该目录，并移动
-                                    FileUtils.moveFileToDirectory(new File(workDir + "/" + fileName), new File(processedDir), true)
-                                    LOG.info("移动文件[" + fileName + "]到指定目录->" + processedDir)
+//                                    FileUtils.moveFileToDirectory(new File(workDir + "/" + fileName), new File(processedDir), true)
+//                                    LOG.info("移动文件[" + fileName + "]到指定目录->" + processedDir)
+                                    new File(workDir + "/" + fileName).delete()
+                                    LOG.info("删除文件[" + fileName + "]")
+
                                 }
                             }
                         }
@@ -232,7 +248,7 @@ class SourceVFS extends AbstractSource with Configurable with EventDrivenSource 
         val headers: java.util.Map[String, String] = new util.HashMap[String, String]()
         headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
         val flag = fileName.split("_")(0)
-        headers.put("fileName", fileName);
+//        headers.put("fileName", fileName);
         headers.put("flag", flag)
         event.setBody(data)
         event.setHeaders(headers)
@@ -256,6 +272,10 @@ class SourceVFS extends AbstractSource with Configurable with EventDrivenSource 
       */
     def readStream(inputStream: InputStream, filename: String, size: Long): Boolean = {
         if (inputStream == null) {
+            return false
+        }
+        if (!fileTypeList.contains(filename.split("_")(0).toUpperCase)) {
+            LOG.error("请为[" + filename + "]指定对应的文件前缀=>" + fileTypeList.toString)
             return false
         }
         inputStream.skip(size)
@@ -337,5 +357,22 @@ class SourceVFS extends AbstractSource with Configurable with EventDrivenSource 
         }
         status
     }
+
+
+    /**
+      * 功能描述:获取上月的日期
+      *
+      * Param
+      * Return
+      * 　　* Author lzy
+      * 　　* Date 2018/4/13 15:45
+      * 　　*/
+    def getlastMonth: String = {
+        val c: Calendar = Calendar.getInstance
+        c.add(Calendar.MONTH, -(1))
+        val time: String = UpdateBatchSdf.format(c.getTime)
+        return time
+    }
+
 
 }
